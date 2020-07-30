@@ -18,24 +18,24 @@
   
   
   <title>VPN主题：GRE + IPSec vpn + ospf 配置 | GY</title>
-  <meta name="description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：   配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4">
+  <meta name="description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：  配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4]">
 <meta name="keywords" content="实验">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VPN主题：GRE + IPSec vpn + ospf 配置">
 <meta property="og:url" content="https://tiangy.github.io/2020/07/30/GRE-IPSec-vpn/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：   配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4">
+<meta property="og:description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：  配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4]">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/24130770-b76097ed295b9120.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/24130770-62a68ae99ddbf61a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/24130770-e3b5f47716171958.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/24130770-5ae682dda9adba12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/24130770-967bf26b09a3d2da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2020-07-30T09:07:59.946Z">
+<meta property="og:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrED6mHmWfgJuC4KtG8nzotJbIDG9e0Vuu.JXhfk*5Hq9*Y08xfmYdaQasJSD**eMtbXpEfocxK53PPJNvtlzxywI!/b&bo=sgLoAQAAAAADF2s!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrENSiJJmfDOIXkBAoHI79d7IMQ9g4UrxpCnJL4EQQ.va7dB5V32PR9R7.AnWbEOxdzjRbmQhLcqaha0LvC6rvRec!/b&bo=GAOkAAAAAAADF40!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEEFZxtp54Dln7*hTjaBaOeolf0Ldts4IEH6tokNkNkNh8.CXs38ZoqQMtC2v*30QLXFVzoaYMp9g2CAvE8TUN.E!/b&bo=VgMwAQAAAAADF1Y!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEIoMqxKk*E*1N2PkAm6FDZPjokLjZNyuIWr0xKpsVNKIXm55T.wKZQ3u9Ue8tPph4kxrSGGbFscgIH9Wg9687pA!/b&bo=OgOqAAAAAAADF6E!&rf=viewer_4">
+<meta property="og:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEJZhQxp.*iXwe3JVrokz71SB7MKT5a7FvDLCBJUxWZ69LmoQiD0rV7HXXQm.bxin2GvBCrvpPPYy.SvthYQn4e4!/b&bo=UgNXAwAAAAADFzc!&rf=viewer_4">
+<meta property="og:updated_time" content="2020-07-30T09:24:57.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VPN主题：GRE + IPSec vpn + ospf 配置">
-<meta name="twitter:description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：   配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/24130770-b76097ed295b9120.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:description" content="此文章主要记录实验配置 主要实现： 基于GRE+IPSec vpn隧道实现跨公网ospf互通（当然静态路由以可以）     ENSP拓扑图：  配置：1. 配置缺省路由，保证互联公网地址可达：12345678R1配置:[R1]ip route-static 0.0.0.0 0 12.1.1.2R3配置：[R3]ip route-static 0.0.0.0 0 23.1.1.2R4配置：[R4]">
+<meta name="twitter:image" content="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrED6mHmWfgJuC4KtG8nzotJbIDG9e0Vuu.JXhfk*5Hq9*Y08xfmYdaQasJSD**eMtbXpEfocxK53PPJNvtlzxywI!/b&bo=sgLoAQAAAAADF2s!&rf=viewer_4">
   <!-- Canonical links -->
   <link rel="canonical" href="https://tiangy.github.io/2020/07/30/GRE-IPSec-vpn/index.html">
   
@@ -409,7 +409,7 @@
 </li>
 </ul>
 <ul>
-<li><strong>ENSP拓扑图：</strong><br><img src="https://upload-images.jianshu.io/upload_images/24130770-b76097ed295b9120.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ENSP拓扑图"> </li>
+<li><strong>ENSP拓扑图：</strong><br><img src="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrED6mHmWfgJuC4KtG8nzotJbIDG9e0Vuu.JXhfk*5Hq9*Y08xfmYdaQasJSD**eMtbXpEfocxK53PPJNvtlzxywI!/b&bo=sgLoAQAAAAADF2s!&rf=viewer_4" alt="ENSP拓扑图"></li>
 </ul>
 <h3 id="配置："><a href="#配置：" class="headerlink" title="配置："></a>配置：</h3><h5 id="1-配置缺省路由，保证互联公网地址可达："><a href="#1-配置缺省路由，保证互联公网地址可达：" class="headerlink" title="1. 配置缺省路由，保证互联公网地址可达："></a>1. 配置缺省路由，保证互联公网地址可达：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">R1配置:</span><br><span class="line">[R1]ip route-static 0.0.0.0 0 12.1.1.2</span><br><span class="line"></span><br><span class="line">R3配置：</span><br><span class="line">[R3]ip route-static 0.0.0.0 0 23.1.1.2</span><br><span class="line"></span><br><span class="line">R4配置：</span><br><span class="line">[R4]ip route-static 0.0.0.0 0 24.1.1.2</span><br></pre></td></tr></table></figure>
 
@@ -458,10 +458,10 @@
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line">ospf 1 </span><br><span class="line"> area 0.0.0.0 </span><br><span class="line">  network 192.168.4.0 0.0.0.255 </span><br><span class="line">  network 192.168.13.0 0.0.0.255 </span><br><span class="line">#</span><br></pre></td></tr></table></figure>
 
-<h5 id="5-配置完成"><a href="#5-配置完成" class="headerlink" title="5. 配置完成"></a>5. 配置完成</h5><p><strong>1. 在总部查看ospf邻居状态：</strong><br><img src="https://upload-images.jianshu.io/upload_images/24130770-62a68ae99ddbf61a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><strong>2. 查看路由表：</strong><br><img src="https://upload-images.jianshu.io/upload_images/24130770-e3b5f47716171958.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><strong>3. 查看sa信息：</strong><br><img src="https://upload-images.jianshu.io/upload_images/24130770-5ae682dda9adba12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
-<p><strong>4.抓个包显示数据已加密：</strong><br><img src="https://upload-images.jianshu.io/upload_images/24130770-967bf26b09a3d2da.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h5 id="5-配置完成"><a href="#5-配置完成" class="headerlink" title="5. 配置完成"></a>5. 配置完成</h5><p><strong>1. 在总部查看ospf邻居状态：</strong><br><img src="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrENSiJJmfDOIXkBAoHI79d7IMQ9g4UrxpCnJL4EQQ.va7dB5V32PR9R7.AnWbEOxdzjRbmQhLcqaha0LvC6rvRec!/b&bo=GAOkAAAAAAADF40!&rf=viewer_4" alt></p>
+<p><strong>2. 查看路由表：</strong><br><img src="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEEFZxtp54Dln7*hTjaBaOeolf0Ldts4IEH6tokNkNkNh8.CXs38ZoqQMtC2v*30QLXFVzoaYMp9g2CAvE8TUN.E!/b&bo=VgMwAQAAAAADF1Y!&rf=viewer_4" alt></p>
+<p><strong>3. 查看sa信息：</strong><br><img src="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEIoMqxKk*E*1N2PkAm6FDZPjokLjZNyuIWr0xKpsVNKIXm55T.wKZQ3u9Ue8tPph4kxrSGGbFscgIH9Wg9687pA!/b&bo=OgOqAAAAAAADF6E!&rf=viewer_4" alt></p>
+<p><strong>4.抓个包显示数据已加密：</strong><br><img src="http://m.qpic.cn/psc?/V53dBxp407A3Q726W1Ue2sVftU3Udv9j/TmEUgtj9EK6.7V8ajmQrEJZhQxp.*iXwe3JVrokz71SB7MKT5a7FvDLCBJUxWZ69LmoQiD0rV7HXXQm.bxin2GvBCrvpPPYy.SvthYQn4e4!/b&bo=UgNXAwAAAAADFzc!&rf=viewer_4" alt></p>
 
       
     </div>
